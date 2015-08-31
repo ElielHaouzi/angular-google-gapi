@@ -3,10 +3,9 @@
  * @version v0.1.2
  * @link https://github.com/maximepvrt/angular-google-gapi
  */
-'use strict';
 /*global angular */
 /*global console */
-angular.module('angular-google-gapi', [])
+angular.module('angular-google-gapi')
 .factory('GApi', function($q, GClient, GData, $window) {
   var apisLoad  = [];
   var observerCallbacks = [];

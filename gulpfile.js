@@ -7,7 +7,7 @@ var $ = require('gulp-load-plugins')();
 var config = {compile: 'dist'};
 
 var pkg    = require('./package.json'),
-    moduleFiles = ['src/*.js'];
+    moduleFiles = ['src/gdata.js', 'src/gclient.js', 'src/gapi.js', 'src/gauth.js'];
 
 gulp.task('jshint', function() {
 	var options = {curly: true, immed: true, newcap: true, noarg: true,

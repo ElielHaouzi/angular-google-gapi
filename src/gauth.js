@@ -1,4 +1,4 @@
-angular.module('angular-google-gapi', [])
+angular.module('angular-google-gapi')
 .factory('GAuth', function($rootScope, $q, GClient, GApi, GData, $interval,
                            $window, $location) {
 
@@ -6,24 +6,22 @@ angular.module('angular-google-gapi', [])
   var isOAuth2Loaded = false;
 
   var config = {
-    scope: 'email',
-    response_type: 'token id_token'
+    scope: 'email'
   };
 
   function loadOAuth2() {
     var d = $q.defer();
 
     if (isOAuth2Loaded) {
-      return d.resolve();
-    }
-
-    GClient.getApiClient().then(function() {
-      $window.gapi.client.load('oauth2', 'v2', function() {
-        isOAuth2Loaded = true;
-        return d.resolve();
+      d.resolve();
+    } else {
+      GClient.getApiClient().then(function() {
+        $window.gapi.client.load('oauth2', 'v2', function() {
+          isOAuth2Loaded = true;
+          d.resolve();
+        });
       });
-    });
-
+    }
     return d.promise;
   }
 
@@ -32,7 +30,7 @@ angular.module('angular-google-gapi', [])
       config.immediate = mode;
 
       if(domain !== undefined) {
-        config.hd = DOMAIN;
+        config.hd = domain;
       }
 
       $window.gapi.auth.authorize(config, handleAuthResultCallback);
@@ -112,7 +110,9 @@ angular.module('angular-google-gapi', [])
 
   return {
     setClient: function(clientId) {
-      config.clientId = clientId;
+      // client_id is not in CamelCase because it is directly sended to the
+      // authorize function
+      config.client_id = clientId;
     },
     setDomain: function(domainApp) {
       domain = domainApp;
@@ -125,24 +125,24 @@ angular.module('angular-google-gapi', [])
       signin(true, function() {
         getUser().then(function (user) {
             d.resolve(user);
-        }, function () {
-            d.reject();
+        }, function (resp) {
+            d.reject(resp);
         });
       });
       return d.promise;
     },
-    login: function(){
+    login: function() {
       var d = $q.defer();
       signin(false, function() {
         getUser().then(function (user) {
-          d.resolve();
-        }, function () {
-          d.reject();
+          d.resolve(user);
+        }, function (resp) {
+          d.reject(resp);
         });
       });
       return d.promise;
     },
-    setToken: function(token){
+    setToken: function(token) {
       var d = $q.defer();
       loadOAuth2().then(function (){
         $window.gapi.auth.setToken(token);

@@ -1,6 +1,8 @@
 angular.module('angular-google-gapi', [
   'angular-storage'
-])
+]);
+
+angular.module('angular-google-gapi')
 .factory('GData', function ($rootScope, store) {
   $rootScope.gapi = {};
 

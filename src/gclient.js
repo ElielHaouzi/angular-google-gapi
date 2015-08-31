@@ -1,4 +1,4 @@
-angular.module('angular-google-gapi', [])
+angular.module('angular-google-gapi')
 .factory('GClient', function ($document, $q, $timeout, $interval, $window) {
   var URL = 'https://apis.google.com/js/client.js';
   var apiKey,
@@ -48,7 +48,7 @@ angular.module('angular-google-gapi', [])
   return {
     getApiClient: function() {
       var d = $q.defer();
-      console.log(isGaeApiLoaded);
+      
       if(isGaeApiLoaded) {
         d.resolve();
       }

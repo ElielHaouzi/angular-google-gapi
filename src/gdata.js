@@ -20,13 +20,8 @@ angular.module('angular-google-gapi')
     getUser : function(value) {
       return user;
     },
-    setUser: function(userObj) {
-      user = userObj;
-      if(userObj !== null) {
-        store.put('userId', userObj.id);
-      } else {
-        store.remove('userId');
-      }
+    setUser: function(userResult) {
+      user = (userResult) ? store.set('user', userResult) : store.remove('user');
     }
   };
 });

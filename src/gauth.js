@@ -85,7 +85,7 @@ angular.module('angular-google-gapi')
         if (resp.code) {
           d.reject();
         } else {
-          GData.isLogin(true);
+          GData.setLogin(true);
           GApi.executeCallbacks();
 
           var user = {};
@@ -99,7 +99,7 @@ angular.module('angular-google-gapi')
               user.name = resp.name;
           }
           user.link = resp.link;
-          GData.getUser(user);
+          GData.setUser(user);
           d.resolve(user);
         }
       });
@@ -124,9 +124,10 @@ angular.module('angular-google-gapi')
       var d = $q.defer();
       signin(true, function() {
         getUser().then(function (user) {
-            d.resolve(user);
+          $rootScope.$broadcast('google:signed-in');
+          d.resolve(user);
         }, function (resp) {
-            d.reject(resp);
+          d.reject(resp);
         });
       });
       return d.promise;
@@ -135,6 +136,7 @@ angular.module('angular-google-gapi')
       var d = $q.defer();
       signin(false, function() {
         getUser().then(function (user) {
+          $rootScope.$broadcast('google:signed-in');
           d.resolve(user);
         }, function (resp) {
           d.reject(resp);
@@ -165,8 +167,8 @@ angular.module('angular-google-gapi')
       var d = $q.defer();
       loadOAuth2().then(function() {
         $window.gapi.auth.setToken(null);
-        GData.isLogin(false);
-        GData.getUser(null);
+        GData.setLogin(false);
+        GData.setUser(null);
         $rootScope.$broadcast('google:signed-out');
         d.resolve();
       });
